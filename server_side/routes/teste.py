@@ -28,48 +28,38 @@ testDataFrame.userId = testDataFrame.userId.astype('int32')
 testDataFrame.movieId = testDataFrame.movieId.astype('int32')
 user_id = 999999
 
-def movieLens(movielens):
-    # If movieLens == 20 then load 20M movieLen + movies database 
-    if movieLens == 20:
-        ratings = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/movielens20M/rating.csv",usecols=['userId', 'movieId', 'rating'])
-        ratings = ratings.append(testDataFrame,ignore_index=True)
-        #27278 movies
-        movies = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/movielens20M/movie.csv")
-    #Then load 100k movielens
-    else:
-        ratings = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+'/movielens/ratings.csv',usecols=['userId', 'movieId', 'rating'])
-        ratings = ratings.append(testDataFrame,ignore_index=True)
-        # #9125 movies
-        movies = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/movielens/movies.csv")
-    reader = Reader(rating_scale=(0.5, 5))
-    data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
+ratings = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/movielens20M/rating.csv",usecols=['userId', 'movieId', 'rating'])
+ratings = ratings.append(testDataFrame,ignore_index=True)
+#27278 movies
+movies = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/movielens20M/movie.csv")
+#Then load 100k movielens
+   
+reader = Reader(rating_scale=(0.5, 5))
+data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
 
-    # print('###################### MOVIES SELECTED BY THE USER ###############################')
-    # for index, row in ratings.iterrows():
-    #     if(row.userId == user_id):
-    #         print(movies[movies.movieId == row.movieId]
-    #               [['title', 'genres']].values[0])
-    # print('#################### RECOMMENDATION ##################################################')
-    algo = SVD()
-    trainingSet = data.build_full_trainset()
-    algo.fit(trainingSet)
-        
-    ids = pd.Series(ratings.movieId, name='movieId').unique()
-    x = ratings[(ratings.movieId.isin(ids)) & (ratings.userId != user_id)]
-
-    x = x[~x.movieId.isin(testDataFrame.movieId.values)] #id do testDataFrame
-
-    t = []
-    for rows in x.movieId.unique():
-        t.append(algo.predict(user_id, rows))
-    t = sorted(t, key=itemgetter(3))
-    for index, i in enumerate(t[-10:]):
-        print("Top #", index+1,
-            movies[movies.movieId == i[1]][['title', 'genres']].values[0],i[3])
-    sys.stdout.flush()
+# print('###################### MOVIES SELECTED BY THE USER ###############################')
+# for index, row in ratings.iterrows():
+#     if(row.userId == user_id):
+#         print(movies[movies.movieId == row.movieId]
+#               [['title', 'genres']].values[0])
+# print('#################### RECOMMENDATION ##################################################')
+algo = SVD()
+trainingSet = data.build_full_trainset()
+algo.fit(trainingSet)
     
-movieLens(100)
+ids = pd.Series(ratings.movieId, name='movieId').unique()
+x = ratings[(ratings.movieId.isin(ids)) & (ratings.userId != user_id)]
 
+x = x[~x.movieId.isin(testDataFrame.movieId.values)] #id do testDataFrame
+
+t = []
+for rows in x.movieId.unique():
+    t.append(algo.predict(user_id, rows))
+t = sorted(t, key=itemgetter(3))
+for index, i in enumerate(t[-10:]):
+    print("Top #", index+1,
+        movies[movies.movieId == i[1]][['title', 'genres']].values[0],i[3])
+sys.stdout.flush()
 
 # movies = pd.read_csv("movielens20M/movie.csv")
 
