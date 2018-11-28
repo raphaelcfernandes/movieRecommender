@@ -1,45 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MoviesService } from '../services/movies.service';
 import { Movie } from '../models/movie';
-import { FormControl } from '@angular/forms';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
-  myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
-  books: any;
-  public Movies: Array<Movie>;
+  Movies: Movie[];
+  dataSource: MatTableDataSource<Movie>;
+  displayedColumns: string[] = ['movieId', 'title', 'year','select'];
 
-  constructor(private fb: FormBuilder, private movieService: MoviesService) { }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  getAllMovies() {
-    this.movieService.getAllMovies().subscribe(movies => {
-      this.Movies = movies;
-      // console.log(this.Movies)
-      this.books = "blablabla";
-    })
-  }
-  ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+  ngOnInit() { }
+
+  constructor(private movieService: MoviesService) {
     this.getAllMovies();
   }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  getAllMovies() {
+    return this.movieService.getAllMovies().subscribe(movies => {
+      this.Movies = movies;
+      this.dataSource = new MatTableDataSource(this.Movies);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
+
+  
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+
   }
 
   sendRec() {

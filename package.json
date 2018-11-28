@@ -30,6 +30,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-load": "^1.1.16",
+    "mdbootstrap": "^4.5.15",
     "mongoose": "^5.3.13",
     "nodemon": "^1.18.6",
     "rxjs": "^6.3.3",

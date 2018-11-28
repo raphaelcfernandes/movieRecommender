@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material';
 import { MoviesService } from '../services/movies.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material';
 @NgModule({
   declarations: [
     AppComponent
@@ -25,7 +27,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [MoviesService],
   bootstrap: [AppComponent]
