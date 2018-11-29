@@ -5,7 +5,7 @@ var spawn = require("child_process").spawn;
 var path = require('path')
 
 router.get('/getAllMovies', function (req, res) {
-    movies.find({}).limit(100).exec().then(function (result) {
+    movies.find({}).limit(10).exec().then(function (result) {
         res.status(200).json(result);
     });
 });

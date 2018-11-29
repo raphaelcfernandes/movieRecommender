@@ -1,12 +1,22 @@
-# Movie Recommendation
+# Required Dependencies 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+MongoDB
+NPM >= 3.5.2
+python >= 3.6.5
+Angular CLI
+Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/latest/) and extract it inside server_side/routes
+
+# Installation
+
+npm install 
 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Development server
+
+First run ng build with --watch flag to allow node to listen automatically to the directory built by Angular.
 
 Run `nodemon` for a dev server. Navigate to `http://localhost:8080/`. The app will automatically reload if you change any of the source files.
 
