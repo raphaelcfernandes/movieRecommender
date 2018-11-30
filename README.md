@@ -8,11 +8,13 @@ python >= 3.6.5
 
 Angular CLI
 
-Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/latest/) and extract it inside server_side/routes
+Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/latest/) and extract it inside server_side/scripts
 
 # Installation
 
 npm install 
+
+In order to have the right dataset, you need to execute the file createMongoDB.py inside server_side/scripts/ with the argument 20M for the movielens dataset with ml-latest, or with 100k to run it with ml-latest-small. This script will connect to your mongo dataset and will create a collection for you. Make sure your mongo service is running :).
 
 ## Build
 
