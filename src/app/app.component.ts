@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
   displayedColumns: string[] = ['movieId', 'title', 'year', 'rate', 'select'];
   displayedSelectedMoviesColumns: string[] = ['title', 'year', 'rating', 'actions'];
   isLoadingResults = true;
-  rate = new FormControl();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator) paginatorMoviesChosen: MatPaginator;
