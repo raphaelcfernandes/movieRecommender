@@ -8,7 +8,7 @@ python >= 3.6.5
 
 Angular CLI
 
-Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/latest/) and extract it inside server_side/routes
+Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/latest/) and extract it inside server_side/scripts
 
 # Installation
 
