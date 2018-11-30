@@ -1,54 +1,74 @@
-<mat-form-field class="myDiv" *ngIf="!isLoadingResults">
+<mat-form-field>
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
-<div class="example-container mat-elevation-z8">
-  <div class="example-loading-shade" *ngIf="isLoadingResults">
-    <mat-spinner></mat-spinner>
-  </div>
 
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
 
-  <div class="example-table-container" *ngIf="!isLoadingResults">
+    <!-- ID Column -->
+    <ng-container matColumnDef="movieId">
+      <th mat-header-cell *matHeaderCellDef> MovieID </th>
+      <td mat-cell *matCellDef="let element"> {{element.movieId}} </td>
+    </ng-container>
 
-    <table mat-table [dataSource]="dataSource" class="example-table" matSort matSortActive="created"
-      matSortDisableClear matSortDirection="asc">
+    <!-- Name Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
 
-      <ng-container matColumnDef="movieId">
-        <th mat-header-cell *matHeaderCellDef> Title </th>
-        <td mat-cell *matCellDef="let element"> {{element.movieId}} </td>
-      </ng-container>
-      
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef> Title </th>
-        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-      </ng-container>
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef> Year </th>
+      <td mat-cell *matCellDef="let element"> {{element.year}} </td>
+    </ng-container>
 
-      <ng-container matColumnDef="year">
-        <th mat-header-cell *matHeaderCellDef> Year </th>
-        <td mat-cell *matCellDef="let element"> {{element.year}} </td>
-      </ng-container>
+    <ng-container matColumnDef="rate">
+      <th mat-header-cell *matHeaderCellDef> Score</th>
+      <td mat-cell *matCellDef="let element">
+        <!-- <mat-form-field appearance="standard" >
+                <mat-label>Give a score from 0 to 5</mat-label>
+                <input appOnlyNumber [formControl]="rate" matInput placeholder="Placeholder">
+              </mat-form-field> -->
+        <mat-form-field>
+          <mat-select placeholder="Select One" (selectionChange)="giveRecommendationToSingleMovie(element,$event)">
+            <mat-option *ngFor="let rating of ratings" [value]="rating">
+              {{rating}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef> Actions</th>
-        <td mat-cell *matCellDef="let element" ><button *ngIf="!movieChosen(element)" (click)="selectMovie(element)" mat-raised-button color="primary">Rate
-            Movie</button></td>
-      </ng-container>
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef> Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <button *ngIf="!movieChosen(element)" (click)="selectMovie(element)" mat-raised-button color="primary">Rate
+          Me!</button>
+      </td>
+    </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+  </table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="5" [hidden]="!isLoadingResults"></mat-paginator>
+  <mat-paginator [pageSize]="5"></mat-paginator>
 </div>
 
-<h3 class="myDiv">
-  Movies Selected
-</h3>
 
-<div class="example-table-container" *ngIf="!isLoadingResults">
+<div class="myDiv" *ngIf="movieArray?.length >= 1">
+  <button (click)="sendRec()" mat-raised-button color="primary">Get Recommendations!</button>
+</div>
 
-  <table mat-table [dataSource]="moviesChosen" class="example-table" matSort matSortActive="created" matSortDisableClear
-    matSortDirection="asc">
+<div class="myDiv" *ngIf="recommendedMovies?.length > 0">
+    <div *ngFor="let movie of recommendedMovies; let i = index">
+      {{i+1}} - {{ movie }}
+    </div>
+</div>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="moviesChosen" matSort>
+
 
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef> Title </th>
@@ -61,20 +81,24 @@
     </ng-container>
 
     <ng-container matColumnDef="rating">
-      <th mat-header-cell *matHeaderCellDef> Rating</th>
+      <th mat-header-cell *matHeaderCellDef> Rate </th>
       <td mat-cell *matCellDef="let element"> {{element.rating}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell *matCellDef="let element"><button (click)="removeMovie(element)" mat-raised-button color="warn">Remove Rating</button></td>
+      <td mat-cell *matCellDef="let element">
+        <button (click)="removeMovie(element)" mat-raised-button color="primary">Remove</button>
+      </td>
     </ng-container>
 
-
-    <tr mat-header-row *matHeaderRowDef="displayedSelectedMoviesColumns; sticky:true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedSelectedMoviesColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedSelectedMoviesColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedSelectedMoviesColumns;">
+    </tr>
   </table>
+
+  <mat-paginator [pageSize]="5"></mat-paginator>
 </div>
-<mat-paginator [length]="resultsLength" [pageSize]="5" [hidden]="!isLoadingResults"></mat-paginator>
+
 
 <router-outlet></router-outlet>

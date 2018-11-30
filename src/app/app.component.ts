@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MoviesService } from '../services/movies.service';
 import { Movie } from '../models/movie';
-import { MatPaginator, MatSort, MatTableDataSource, MatTab, MatTable } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -14,18 +15,23 @@ export class AppComponent implements OnInit {
   dataSource: MatTableDataSource<Movie>;
   moviesChosen: MatTableDataSource<Movie>;
   private movieArray: Movie[] = [];
-
-  displayedColumns: string[] = ['movieId', 'title', 'year', 'select'];
+  private ratings: number[] = [5, 4, 3, 2, 1, 0];
+  private recommendedMovies: [] = [];
+  displayedColumns: string[] = ['movieId', 'title', 'year', 'rate', 'select'];
   displayedSelectedMoviesColumns: string[] = ['title', 'year', 'rating', 'actions'];
   isLoadingResults = true;
+  rate = new FormControl();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginatorMoviesChosen: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() { }
 
   constructor(private movieService: MoviesService) {
     this.getAllMovies();
+    this.moviesChosen = new MatTableDataSource(this.movieArray);
+    this.moviesChosen.paginator = this.paginatorMoviesChosen;
   }
 
   getAllMovies() {
@@ -38,7 +44,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
@@ -48,13 +53,9 @@ export class AppComponent implements OnInit {
   }
 
   sendRec() {
-    this.movieService.sendRecommendation(['teste1', 'teste2']).subscribe(res => {
-      console.log(res);
+    this.movieService.sendRecommendation(this.movieArray).subscribe(res => {
+      this.recommendedMovies = res.reverse();
     });
-  }
-
-  openDialog() {
-
   }
 
   movieChosen(element: Movie) {
@@ -67,12 +68,14 @@ export class AppComponent implements OnInit {
     this.moviesChosen = new MatTableDataSource(this.movieArray);
   }
 
+  giveRecommendationToSingleMovie(element: Movie, event) {
+    element.Rating = event.value;
+  }
+
   selectMovie(movie: Movie): void {
     const y = new Movie(movie);
-    y.Rating = 4;
+    y.Rating = Number(movie.Rating);
     this.movieArray.push(y);
-
     this.moviesChosen = new MatTableDataSource(this.movieArray);
-
   }
 }

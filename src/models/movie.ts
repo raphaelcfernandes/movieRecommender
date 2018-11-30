@@ -13,6 +13,7 @@ export class Movie {
         this.title = rawUser.title;
         this.genres = rawUser.genres;
         this._id = rawUser._id;
+        this.rating = rawUser.rate;
     }
 
     get MovieId(): number {

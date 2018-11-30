@@ -5,16 +5,20 @@ var spawn = require("child_process").spawn;
 var path = require('path')
 
 router.get('/getAllMovies', function (req, res) {
-    movies.find({}).limit(10).exec().then(function (result) {
+    movies.find({}).exec().then(function (result) {
         res.status(200).json(result);
     });
 });
 
 router.post('/sendRecommendation', function (req, res) {
-    const pythonProcess = spawn('python',[path.join(__dirname, 'teste.py')]);
+    const pythonProcess = spawn('python',[path.join(__dirname, 'recommender.py'),JSON.stringify(req.body)]);
+    var finalResult;
     pythonProcess.stdout.on('data', (data) => {
-        console.log(data.toString())
-    })
+        finalResult = data.toString();
+    });
+    pythonProcess.stdout.on('close', (data) => {
+        res.status(200).json(JSON.parse(finalResult));
+    });
 });
 
 module.exports = router;

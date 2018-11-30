@@ -17,7 +17,6 @@ export class MoviesService {
   }
 
   public sendRecommendation(data): Observable<any> {
-    console.log(data)
     return this.http.post('http://localhost:8080/movies/sendRecommendation', data, httpOptions);
   }
 }

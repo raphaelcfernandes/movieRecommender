@@ -15,9 +15,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { OnlyNumberDirective } from './only-number.directive';
+import { MatGridListModule } from '@angular/material/grid-list';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    OnlyNumberDirective
   ],
   imports: [
     BrowserModule,
@@ -33,7 +38,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatTableModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule,
+    MatGridListModule
   ],
   providers: [MoviesService],
   bootstrap: [AppComponent]
