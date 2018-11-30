@@ -11,7 +11,7 @@ router.get('/getAllMovies', function (req, res) {
 });
 
 router.post('/sendRecommendation', function (req, res) {
-    const pythonProcess = spawn('python',[path.join(__dirname, 'recommender.py'),JSON.stringify(req.body)]);
+    const pythonProcess = spawn('python',[path.join(__dirname, '../scripts/recommender.py'),JSON.stringify(req.body)]);
     var finalResult;
     pythonProcess.stdout.on('data', (data) => {
         finalResult = data.toString();
