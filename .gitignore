@@ -6,14 +6,8 @@
 /out-tsc
 
 # Files
-/routes/movielens/links.csv
-/routes/movielens/movies.csv
-/routes/movielens/ratings.csv
-/routes/movielens/tags.csv
-
-/routes/movielens20M/link.csv
-/routes/movielens20M/movie.csv
-/routes/movielens20M/rating.csv
+/server_side/scripts/ml-latest
+/server_side/scripts/ml-latest-small
 
 # dependencies
 /node_modules
