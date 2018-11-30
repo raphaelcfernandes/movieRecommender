@@ -1,9 +1,13 @@
 # Required Dependencies 
 
 MongoDB
+
 NPM >= 3.5.2
+
 python >= 3.6.5
+
 Angular CLI
+
 Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/latest/) and extract it inside server_side/routes
 
 # Installation
