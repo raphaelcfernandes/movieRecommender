@@ -14,6 +14,8 @@ Download the ml-latest-small.zip (https://grouplens.org/datasets/movielens/lates
 
 npm install 
 
+In order to have the right dataset, you need to execute the file createMongoDB.py inside server_side/scripts/ with the argument 20M for the movielens dataset with ml-latest, or with 100k to run it with ml-latest-small. This script will connect to your mongo dataset and will create a collection for you. Make sure your mongo service is running :).
+
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
