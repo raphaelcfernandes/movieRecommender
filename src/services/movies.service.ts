@@ -2,6 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Movie } from '../models/movie';
 import { Observable } from 'rxjs';
+import {
+  timeout,
+  retryWhen,
+  take,
+  concat,
+  share,
+  delayWhen
+} from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,6 +25,6 @@ export class MoviesService {
   }
 
   public sendRecommendation(data): Observable<any> {
-    return this.http.post('http://localhost:8080/movies/sendRecommendation', data, httpOptions);
+    return this.http.post('http://localhost:8080/movies/sendRecommendation', data, httpOptions).pipe(timeout(20 * 60000));
   }
 }

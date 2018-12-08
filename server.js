@@ -1,5 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const api = require('./server_side/routes')
