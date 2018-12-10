@@ -25,6 +25,6 @@ export class MoviesService {
   }
 
   public sendRecommendation(data): Observable<any> {
-    return this.http.post('http://localhost:8080/movies/sendRecommendation', data, httpOptions).pipe(timeout(20 * 60000));
+    return this.http.post('http://localhost:8080/movies/sendRecommendation', data, httpOptions).pipe(timeout(2000000));
   }
 }

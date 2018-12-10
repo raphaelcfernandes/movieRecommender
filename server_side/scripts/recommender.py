@@ -6,16 +6,34 @@ import os,time,re,sys,json
 
 myMovies = []
 movieListFromAngular = json.loads(sys.argv[1])
-# movieListFromAngular = [{"movieId":69122,"rating":4}, #Matrix revolutions
-# 	{"movieId":86911,"rating":4}, #matrix reloaded
-# 	{"movieId":54503,"rating":3}, #Iron man
-# 	{"movieId":52973,"rating":4}, #Iron man 2
-# 	{"movieId":8807,"rating":4}, #Iron man 3
-# 	{"movieId":3617,"rating":4}, #Deadpool
-# 	{"movieId":35836,"rating":3}, #Interstellar
-# 	{"movieId":2706,"rating":5}, #Fast and furious
-# 	{"movieId":111362,"rating":5}, # xmen future past
-# 	{"movieId":168252,"rating":5}] #Long
+# movieListFromAngular = [{"movieId":168252,"rating":5}, #Logan
+# 	{"movieId":552,"rating":5}, #3 Musketeers
+# 	{"movieId":1408,"rating":5}, #Last of the Mohicans
+# 	{"movieId":2947,"rating":5}, #Goldfinger
+# 	{"movieId":3578,"rating":5}, #Gladiator
+# 	{"movieId":4262,"rating":4}, #Scarface
+# 	{"movieId":4310,"rating":5}, #Pearl Harbor
+# 	{"movieId":4367,"rating":3}, #Laracroft: Tomb Raider
+# 	{"movieId":4369,"rating":4}, #Fast and Furious
+# 	{"movieId":4643,"rating":5}, #Planet of the apes
+# 	{"movieId":5445,"rating":3}, #Minority Report
+# 	{"movieId":5459,"rating":4}, #Man in Black II
+# 	{"movieId":5785,"rating":5}, #Jackass: The Movie
+# 	{"movieId":6016,"rating":5}, #City of god
+# 	{"movieId":58559,"rating":5}, #Dark Knight
+# 	{"movieId":6365,"rating":5}, #Matrix Reloaded
+# 	{"movieId":59784,"rating":5}, #Kung Fu Panda
+# 	{"movieId":72998,"rating":5}, #Avatar
+# 	{"movieId":89745,"rating":5}, #The Avengers
+# 	{"movieId":103042,"rating":3}, #Man of Steel
+# 	{"movieId":112175,"rating":5}, #How to train your dragon 2
+# 	{"movieId":122904,"rating":5}, #Deadpool
+# 	{"movieId":122918,"rating":3}, #Guardians of the galaxy 2
+# 	{"movieId":122922,"rating":5}, #Dr. Strange
+# 	{"movieId":364,"rating":5}, #Lion King
+# 	{"movieId":1907,"rating":5}, #Mulan
+# 	{"movieId":2687,"rating":5}, #Tarzan
+# 	{"movieId":8961,"rating":5}] #Incredibles 
 for i in movieListFromAngular:
 	myDict = {"userId":999999,"movieId":i.get("movieId"),"rating":i.get("rating")}
 	myMovies.append(myDict)
@@ -36,12 +54,13 @@ max_movie_ratings = 50000
 filter_movies = ((ratings['movieId'].value_counts() > min_movie_ratings) & (ratings['movieId'].value_counts() < max_movie_ratings) )
 filter_movies = filter_movies[filter_movies].index.tolist()
 
-# Filter sparse users
-min_user_ratings = 200 #Good one
-filter_users = (ratings['userId'].value_counts() > min_user_ratings)
-filter_users = filter_users[filter_users].index.tolist()
+# # Filter sparse users
+# min_user_ratings = 200 #Good one
+# filter_users = (ratings['userId'].value_counts() > min_user_ratings)
+# filter_users = filter_users[filter_users].index.tolist()
 
-ratings = ratings[(ratings['movieId'].isin(filter_movies)) & (ratings['userId'].isin(filter_users))]
+# ratings = ratings[(ratings['movieId'].isin(filter_movies)) & (ratings['userId'].isin(filter_users))]
+ratings = ratings[(ratings['movieId'].isin(filter_movies))]
 
 ratings = ratings.append(testDataFrame,ignore_index=True)
 ratings.rating = ratings.rating.astype('float32')
@@ -50,12 +69,13 @@ ratings.movieId = ratings.movieId.astype('int32')
 
 movies = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/ml-latest/movies.csv")
 movies = movies[movies.movieId.isin(filter_movies)]
-del filter_movies, filter_users
+# del filter_movies, filter_users
+del filter_movies
 
-reader = Reader(rating_scale=(1, 5))
+reader = Reader(rating_scale=(0.5, 5))
 data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
 
-algo = SVD()
+algo = SVD(n_epochs=15,n_factors=50)
 trainingSet = data.build_full_trainset()
 algo.fit(trainingSet)
     
@@ -71,8 +91,8 @@ for rows in x.movieId.unique():
 t = sorted(t, key=itemgetter(3))
 finalResult = []
 for index, i in enumerate(t[-10:]):
-    # finalResult.append((movies[movies.movieId == i[1]][['title', 'genres']].values[0][0],movies[movies.movieId == i[1]][['title', 'genres']].values[0][1]),)
-	# finalResult.append({movies[movies.movieId == i[1]]['title'].values[0]:movies[movies.movieId == i[1]]['genres'].values[0]})
+#     # finalResult.append((movies[movies.movieId == i[1]][['title', 'genres']].values[0][0],movies[movies.movieId == i[1]][['title', 'genres']].values[0][1]),)
+# 	# finalResult.append({movies[movies.movieId == i[1]]['title'].values[0]:movies[movies.movieId == i[1]]['genres'].values[0]})
 	movie = ''
 	movie = movies[movies.movieId == i[1]]['title'].values[0] + ' - '
 	k = ''

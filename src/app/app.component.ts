@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   dataSource: MatTableDataSource<Movie>;
   moviesChosen: MatTableDataSource<Movie>;
   private movieArray: Movie[] = [];
-  private ratings: number[] = [5, 4, 3, 2, 1, 0];
+  private ratings: number[] = [5, 4, 3, 2, 1];
   private recommendedMovies: [] = [];
   displayedColumns: string[] = ['movieId', 'title', 'genres','year', 'rate', 'select'];
   displayedSelectedMoviesColumns: string[] = ['title', 'year', 'genres', 'rating', 'actions'];
@@ -55,8 +55,8 @@ export class AppComponent implements OnInit {
 
   sendRec() {
     this.isLoadingRecommendations = true;
+    console.log("called");
     this.movieService.sendRecommendation(this.movieArray).subscribe(res => {
-      console.log(res);
       this.isLoadingRecommendations = false;
       this.recommendedMovies = res.reverse();
     });

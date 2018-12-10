@@ -11,14 +11,15 @@ router.get('/getAllMovies', function (req, res) {
 });
 
 router.post('/sendRecommendation', function (req, res) {
+    req.setTimeout(0);
     const pythonProcess = spawn('python',[path.join(__dirname, '../scripts/recommender.py'),JSON.stringify(req.body)]);
     var finalResult;
     pythonProcess.stdout.on('data', (data) => {
         finalResult = data.toString();
     });
     pythonProcess.stdout.on('close', (data) => {
-        console.log(finalResult)
         console.log("Finished calc")
+        console.log(finalResult)
         res.status(200).json(JSON.parse(finalResult));
     });
 });
