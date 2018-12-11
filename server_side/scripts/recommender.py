@@ -54,12 +54,12 @@ max_movie_ratings = 50000
 filter_movies = ((ratings['movieId'].value_counts() > min_movie_ratings) & (ratings['movieId'].value_counts() < max_movie_ratings) )
 filter_movies = filter_movies[filter_movies].index.tolist()
 
-# # Filter sparse users
-# min_user_ratings = 200 #Good one
-# filter_users = (ratings['userId'].value_counts() > min_user_ratings)
-# filter_users = filter_users[filter_users].index.tolist()
+# Filter sparse users
+min_user_ratings = 200 #Good one
+filter_users = (ratings['userId'].value_counts() > min_user_ratings)
+filter_users = filter_users[filter_users].index.tolist()
 
-# ratings = ratings[(ratings['movieId'].isin(filter_movies)) & (ratings['userId'].isin(filter_users))]
+ratings = ratings[(ratings['movieId'].isin(filter_movies)) & (ratings['userId'].isin(filter_users))]
 ratings = ratings[(ratings['movieId'].isin(filter_movies))]
 
 ratings = ratings.append(testDataFrame,ignore_index=True)
@@ -69,13 +69,13 @@ ratings.movieId = ratings.movieId.astype('int32')
 
 movies = pd.read_csv(os.path.dirname(os.path.realpath(__file__))+"/ml-latest/movies.csv")
 movies = movies[movies.movieId.isin(filter_movies)]
-# del filter_movies, filter_users
-del filter_movies
+del filter_movies, filter_users
+# del filter_movies
 
-reader = Reader(rating_scale=(0.5, 5))
+reader = Reader(rating_scale=(1, 5))
 data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
 
-algo = SVD(n_epochs=15,n_factors=50)
+algo = SVD(n_epochs=20,n_factors=50)
 trainingSet = data.build_full_trainset()
 algo.fit(trainingSet)
     

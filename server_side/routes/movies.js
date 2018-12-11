@@ -18,7 +18,6 @@ router.post('/sendRecommendation', function (req, res) {
         finalResult = data.toString();
     });
     pythonProcess.stdout.on('close', (data) => {
-        console.log("Finished calc")
         console.log(finalResult)
         res.status(200).json(JSON.parse(finalResult));
     });
